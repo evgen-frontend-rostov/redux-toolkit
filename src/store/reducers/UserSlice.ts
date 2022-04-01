@@ -5,23 +5,30 @@ import { IUser } from './../../models/IUser';
 interface UserState {
   users: IUser[],
   isLoading: boolean,
-  error: string,
-  count: number
+  error: string
 }
 
 const initialState: UserState = {
   users: [],
   isLoading: false,
-  error: '',
-  count: 0
+  error: ''
 }
 
 export const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    increment (state, action: PayloadAction<number>) {
-      state.count += action.payload;
+    usersFetching (state) {
+      state.isLoading = true;
+    },
+    usersFetchingSuccess (state, action: PayloadAction<IUser[]>) {
+      state.users = action.payload;
+      state.isLoading = false;
+      state.error = '';
+    },
+    usersFetchingError (state, action: PayloadAction<string>) {
+      state.isLoading = false;
+      state.error = action.payload;
     }
   }
 })
