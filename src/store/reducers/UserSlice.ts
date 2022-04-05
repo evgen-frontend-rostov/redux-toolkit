@@ -1,5 +1,6 @@
 import { createReducer, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IUser } from './../../models/IUser';
+import { fetchUsers } from './ActionCreators';
 
 
 interface UserState {
@@ -31,7 +32,20 @@ export const userSlice = createSlice({
     //   state.error = action.payload;
     // }
   },
-  extraReducers: {}
+  extraReducers: {
+    [fetchUsers.pending.type]: (state) => {
+      state.isLoading = true;
+    },
+    [fetchUsers.fulfilled.type]: (state, action: PayloadAction<IUser[]>) => {
+      state.users = action.payload;
+      state.isLoading = false;
+      state.error = '';
+    },
+    [fetchUsers.rejected.type]: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    }
+  }
 })
 
 export default userSlice.reducer;

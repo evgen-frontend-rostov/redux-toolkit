@@ -4,7 +4,7 @@ import { IUser } from "../../models/IUser";
 import { AppDispatch } from "../store";
 import { userSlice } from "./UserSlice";
 
-const { usersFetching, usersFetchingSuccess, usersFetchingError } = userSlice.actions;
+// const { usersFetching, usersFetchingSuccess, usersFetchingError } = userSlice.actions;
 
 // export const fetchUsers = () => async (dispatch: AppDispatch) => {
 //   try {
@@ -16,10 +16,14 @@ const { usersFetching, usersFetchingSuccess, usersFetchingError } = userSlice.ac
 //   }
 // }
 
-export const usersThunk = createAsyncThunk(
-  'usersFetching',
- async () => {
-  const response = await axios.get<IUser[]>('http://jsonplaceholder.typicode.com/users');
-  return response.data;
- }
+export const fetchUsers = createAsyncThunk(
+  'user/fetchAll',
+  async (_, thunkAPI) => {
+    try {
+      const response = await axios.get<IUser[]>('http://jsonplaceholder.typicode.com/users');
+    return response.data;
+    } catch (e) {
+      return thunkAPI.rejectWithValue('Не удалось загрузить пользователей')
+    }
+  }
 )
